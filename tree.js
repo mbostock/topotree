@@ -110,25 +110,12 @@
     return minNode;
   }
 
-  // function node_distance(point) {
-  //   var x = point[0],
-  //       y = point[1],
-  //       x0 = this.extent[0][0],
-  //       y0 = this.extent[0][1],
-  //       x1 = this.extent[1][0],
-  //       y1 = this.extent[1][1];
-  //   return x < x0 ? pointLineSegmentDistance(point, [x0, y0], [x0, y1])
-  //        : x > x1 ? pointLineSegmentDistance(point, [x1, y0], [x1, y1])
-  //        : y < y0 ? y0 - y
-  //        : y > y1 ? y - y1
-  //        : 0;
-  // }
-
- function node_distance(o, q) {
-   var x = q[0], y = q[1],
-       dx = x - Math.max(Math.min(x, o.x1), o.x0),
-       dy = y - Math.max(Math.min(y, o.y1), o.y0);
-   return dx * dx + dy * dy;
+  function node_distance(point) {
+    var x = point[0],
+        y = point[1],
+        dx = x - Math.max(Math.min(x, this.extent[1][0]), this.extent[0][0]),
+        dy = y - Math.max(Math.min(y, this.extent[1][1]), this.extent[0][1]);
+    return dx * dx + dy * dy;
   }
 
   Node.prototype = {
