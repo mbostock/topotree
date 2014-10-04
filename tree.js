@@ -58,24 +58,11 @@
   }
 
   // accumulates intersections with line segment AB
-  // TODO it might be better to check whether the segment intersects this box,
-  // rather than simply checking whether the segment’s box overlaps this box
   function node_intersections(a, b) {
-    var intersections = [],
-        x2 = a[0],
-        y2 = a[1],
-        x3 = b[0],
-        y3 = b[1],
-        t;
-
-    if (x3 < x2) t = x2, x2 = x3, x3 = t;
-    if (y3 < y2) t = y2, y2 = y3, y3 = t;
+    var intersections = [];
 
     (function intersectNode(node) {
-      if (node.extent[0][0] <= x3
-          && x2 <= node.extent[1][0]
-          && node.extent[0][1] <= y3
-          && y2 <= node.extent[1][1]) {
+      if (intersectBoxSegment(node.extent[0], node.extent[1], a, b)) {
         node.children.forEach(function(child) {
           if (child.children) {
             intersectNode(child);
@@ -136,13 +123,17 @@
     ];
   }
 
-  function intersectBoxSegment(a, p2, q, q2) {
-
+  // Returns true if the bounding box AB intersects the line segment CD
+  // TODO could probably optimize this a bit more
+  function intersectBoxSegment(a, b, c, d) {
+    if (c[0] > b[0] && d[0] > b[0] || c[0] < a[0] && d[0] < a[0] || c[1] > b[1] && d[1] > b[1] || c[1] < a[1] && d[1] < a[1]) return false;
+    var s = ccw(c, d, a) > 0; if (ccw(c, d, b) > 0 === s && ccw(c, d, [b[0], a[1]]) > 0 === s && ccw(c, d, [a[0], b[1]]) > 0 === s) return false;
+    return true;
   }
 
   // Three points are a counter-clockwise turn if ccw > 0, clockwise if
   // ccw < 0, and collinear if ccw = 0 because ccw is a determinant that
-  // gives twice the signed  area of the triangle formed by a, b and c.
+  // gives twice the signed area of the triangle ABC.
   function ccw(a, b, c) {
     return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
   }
@@ -154,30 +145,6 @@
     return (ccw(a, c, d) > 0) !== (ccw(b, c, d) > 0)
         && (ccw(a, b, c) > 0) !== (ccw(a, b, d) > 0);
   }
-
-  // returns true if the line segment p intersects the line segment q
-  // http://stackoverflow.com/a/565282
-  // function intersectSegmentSegment(p0, p1, q0, q1) {
-  //   var xr = p1[0] - p0[0],
-  //       yr = p1[1] - p0[1],
-  //       xs = q1[0] - q0[0],
-  //       ys = q1[1] - q0[1],
-  //       xqp = q0[0] - p0[0],
-  //       yqp = q0[1] - p0[1],
-  //       rs = xr * ys - yr * xs,
-  //       qpr = xqp * yr - yqp * xr;
-  //
-  //   if (!rs) { // parallel
-  //     return !qpr // collinear
-  //         && ((q0[0] < p0[0]) !== (q0[0] < p1[0]) !== (q1[0] < p0[0]) !== (q1[0] < p1[0])
-  //          || (q0[1] < p0[1]) !== (q0[1] < p1[1]) !== (q1[1] < p0[1]) !== (q1[1] < p1[1]));
-  //   }
-  //
-  //   var qps = xqp * ys - yqp * xs,
-  //       t = qps / rs,
-  //       u = qpr / rs;
-  //   return 0 < t && t < 1 && 0 < u && u < 1;
-  // }
 
   function leaf_intersections(a, b) {
     return intersectSegmentSegment(this.coordinates[0], this.coordinates[1], a, b) ? [this] : [];
