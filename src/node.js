@@ -1,4 +1,5 @@
 import "intersect";
+import "distance";
 import "heap";
 
 function Node(child0, child1) {
@@ -14,7 +15,7 @@ function Node(child0, child1) {
 Node.prototype = {
   extent: null,
   children: null,
-  distance: node_distance,
+  distance: node_distance, // TODO make private
   nearest: node_nearest,
   intersections: node_intersections
 };
@@ -62,11 +63,7 @@ function node_nearest(point) {
 }
 
 function node_distance(point) {
-  var x = point[0],
-      y = point[1],
-      dx = x - Math.max(Math.min(x, this.extent[1][0]), this.extent[0][0]),
-      dy = y - Math.max(Math.min(y, this.extent[1][1]), this.extent[0][1]);
-  return dx * dx + dy * dy;
+  return distancePointBox(point, this.extent[0], this.extent[1]);
 }
 
 function node_compareDistance(a, b) {

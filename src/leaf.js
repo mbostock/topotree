@@ -1,4 +1,5 @@
 import "intersect";
+import "distance";
 
 function Leaf(point0, point1) {
   this.coordinates = [point0, point1];
@@ -11,7 +12,7 @@ function Leaf(point0, point1) {
 Leaf.prototype = {
   extent: null,
   coordinates: null,
-  distance: leaf_distance,
+  distance: leaf_distance, // TODO make private
   intersections: leaf_intersections
 };
 
@@ -20,5 +21,5 @@ function leaf_intersections(a, b) {
 }
 
 function leaf_distance(point) {
-  return pointLineSegmentDistance(point, this.coordinates[0], this.coordinates[1]);
+  return distancePointSegment(point, this.coordinates[0], this.coordinates[1]);
 }
