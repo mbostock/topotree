@@ -15,7 +15,6 @@ function Node(child0, child1) {
 Node.prototype = {
   extent: null,
   children: null,
-  distance: node_distance, // TODO make private
   nearest: node_nearest,
   intersections: node_intersections
 };
@@ -43,17 +42,17 @@ function node_nearest(point) {
   var minNode,
       minDistance = Infinity,
       node = this,
-      distance = node.distance(point),
+      distance = node_distance(node, point),
       candidates = heap(node_compareDistance),
       candidate = {distance: distance, node: node};
 
   do {
     node = candidate.node;
     if (node.children) {
-      candidates.push({distance: node.children[0].distance(point), node: node.children[0]});
-      candidates.push({distance: node.children[1].distance(point), node: node.children[1]});
+      candidates.push({distance: node_distance(node.children[0], point), node: node.children[0]});
+      candidates.push({distance: node_distance(node.children[1], point), node: node.children[1]});
     } else {
-      distance = node.distance(point);
+      distance = node_distance(node, point);
       if (distance < minDistance) minDistance = distance, minNode = node;
     }
 
@@ -62,8 +61,10 @@ function node_nearest(point) {
   return minNode;
 }
 
-function node_distance(point) {
-  return distancePointBox(point, this.extent[0], this.extent[1]);
+function node_distance(node, point) {
+  return node.children
+      ? distancePointBox(point, node.extent[0], node.extent[1])
+      : distancePointSegment(point, node.coordinates[0], node.coordinates[1]);
 }
 
 function node_compareDistance(a, b) {
