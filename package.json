@@ -1,0 +1,9 @@
+{
+  "name": "topotree",
+  "version": "0.0.1",
+  "main": "index.js",
+  "dependencies": {
+    "smash": "0.0",
+    "uglify-js": "2.4"
+  }
+}
