@@ -7,7 +7,7 @@ var suite = vows.describe("ccw");
 suite.addBatch({
   "ccw": {
     topic: function() {
-      smash.load(["src/ccw.js"], "ccw", {}, this.callback);
+      smash.load(["src/ccw.js"], "ccw", {console: console}, this.callback);
     },
 
     "returns zero for three coincident points": function(ccw) {
