@@ -1,4 +1,3 @@
-
 // Three points are a counter-clockwise turn if ccw > 0, clockwise if
 // ccw < 0, and collinear if ccw = 0 because ccw is a determinant that
 // gives twice the signed area of the triangle ABC.

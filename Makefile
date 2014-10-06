@@ -10,7 +10,7 @@ clean:
 	rm -f -- $(GENERATED_FILES)
 
 test:
-	node_module/.bin/vows
+	node_modules/.bin/vows
 
 topotree.js: $(shell node_modules/.bin/smash --ignore-missing --list src/index.js)
 	rm -f $@

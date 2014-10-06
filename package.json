@@ -4,6 +4,7 @@
   "main": "index.js",
   "dependencies": {
     "smash": "0.0",
-    "uglify-js": "2.4"
+    "uglify-js": "2.4",
+    "vows": "0.7"
   }
 }
