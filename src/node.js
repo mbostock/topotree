@@ -41,26 +41,24 @@ function node_intersections(a, b) {
 }
 
 function node_nearest(point) {
-  var minNode,
-      minDistance = Infinity,
+  var nearestNode,
+      nearestDistance = Infinity,
       node = this,
       distance = node_distance(node, point),
-      candidates = heap(node_compareDistance),
-      candidate = {distance: distance, node: node};
+      candidates = heap(node_ascendingDistance),
+      candidate = {d: distance, n: node};
 
   do {
-    node = candidate.node;
-    if (node.children) {
-      candidates.push({distance: node_distance(node.children[0], point), node: node.children[0]});
-      candidates.push({distance: node_distance(node.children[1], point), node: node.children[1]});
-    } else {
-      distance = node_distance(node, point);
-      if (distance < minDistance) minDistance = distance, minNode = node;
+    if ((node = candidate.n).children) {
+      candidates.push({d: node_distance(node.children[0], point), n: node.children[0]});
+      candidates.push({d: node_distance(node.children[1], point), n: node.children[1]});
+    } else if ((distance = node_distance(node, point)) < nearestDistance) {
+      nearestNode = node;
+      nearestDistance = distance;
     }
+  } while ((candidate = candidates.pop()) && candidate.d < nearestDistance);
 
-  } while ((candidate = candidates.pop()) && (distance = candidate.distance) <= minDistance);
-
-  return minNode;
+  return nearestNode;
 }
 
 function node_distance(node, point) {
@@ -69,6 +67,6 @@ function node_distance(node, point) {
       : distancePointSegment(point, node.coordinates[0], node.coordinates[1]);
 }
 
-function node_compareDistance(a, b) {
-  return a.distance - b.distance;
+function node_ascendingDistance(a, b) {
+  return a.d - b.d;
 }
