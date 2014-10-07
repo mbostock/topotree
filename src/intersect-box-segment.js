@@ -14,8 +14,8 @@ function intersectBoxSegment(a, b, c, d) {
   if (c1 > d1) s = c1, c1 = d1, d1 = s;
 
   return !(c0 > b0 || d0 < a0 || c1 > b1 || d1 < a1)
-      && (!(s = ccw(c, d, a))
-        || !(t = ccw(c, d, b)) || t > 0 !== (s = s > 0)
-        || !(t = ccw(c, d, [b0, a1])) || t > 0 !== s
-        || !(t = ccw(c, d, [a0, b1])) || t > 0 !== s);
+      && !((s = ccw(c, d, a))
+        && (t = ccw(c, d, b)) && t > 0 === (s = s > 0)
+        && (t = ccw(c, d, [b0, a1])) && t > 0 === s
+        && (t = ccw(c, d, [a0, b1])) && t > 0 === s);
 }

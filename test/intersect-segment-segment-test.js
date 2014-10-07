@@ -51,8 +51,21 @@ suite.addBatch({
     //     \
     //      B
     //
-    "returns true for two line segments that touch at one point": function(intersectSegmentSegment) {
+    "returns true for two line segments that touch at a point along a segment": function(intersectSegmentSegment) {
       assert.equal(intersectSegmentSegment([0, 0], [2, 2], [1, 0], [1, 1]), true);
+      assert.equal(intersectSegmentSegment([1, 0], [1, 1], [0, 0], [2, 2]), true);
+    },
+
+    //
+    // A---BC---D
+    //
+    "returns true for two line segments that share an endpoint": function(intersectSegmentSegment) {
+      assert.equal(intersectSegmentSegment([0, 0], [0, 1], [0, 0], [-1, 0]), true);
+      assert.equal(intersectSegmentSegment([0, 0], [-1, 0], [0, 0], [0, 1]), true);
+      assert.equal(intersectSegmentSegment([0, 0], [0, 1], [0, 1], [0, 2]), true);
+      assert.equal(intersectSegmentSegment([0, 0], [0, 1], [0, 1], [1, 1]), true);
+      assert.equal(intersectSegmentSegment([0, 1], [0, 2], [0, 0], [0, 1]), true);
+      assert.equal(intersectSegmentSegment([0, 1], [1, 1], [0, 0], [0, 1]), true);
     },
 
     //
