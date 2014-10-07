@@ -29,7 +29,9 @@ suite.addBatch({
     //
     "returns zero for a point at a segment endpoint": function(distancePointSegment) {
       assert.equal(distancePointSegment([0, 0], [0, 0], [0, 1]), 0);
+      assert.equal(distancePointSegment([0, ε], [0, 0], [0, 1]), 0);
       assert.equal(distancePointSegment([0, 1], [0, 0], [0, 1]), 0);
+      assert.equal(distancePointSegment([0, 1 - ε], [0, 0], [0, 1]), 0);
       assert.equal(distancePointSegment([0, 0], [0, 0], [1, 0]), 0);
       assert.equal(distancePointSegment([1, 0], [0, 0], [1, 0]), 0);
     },

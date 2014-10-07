@@ -4,8 +4,6 @@ var smash = require("smash"),
 
 var suite = vows.describe("distancePointBox");
 
-var ε = 1e-6;
-
 suite.addBatch({
   "distancePointBox": {
     topic: function() {
