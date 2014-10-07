@@ -72,7 +72,7 @@ function lineSegment_intersects(that) {
       : lineSegment_intersectsSegmentSegment(this, that);
 }
 
-// Note: assumes that the two bounding boxes overlap!
+// Note: depends on lineSegment_intersects checking that the bounding boxes overlap!
 function lineSegment_intersectsSegmentSegment(seg1, seg2) {
   var s, t;
   return !((s = lineSegment_ccw(seg1.xb, seg1.yb, seg2.xa, seg2.ya, seg2.xb, seg2.yb))
@@ -81,7 +81,7 @@ function lineSegment_intersectsSegmentSegment(seg1, seg2) {
         && (t = lineSegment_ccw(seg1.xa, seg1.ya, seg1.xb, seg1.yb, seg2.xa, seg2.ya)) && s > 0 === t > 0);
 }
 
-// Note: assumes that the two bounding boxes overlap!
+// Note: depends on lineSegment_intersects checking that the bounding boxes overlap!
 function lineSegment_intersectsBoxSegment(box, seg) {
   var s, t;
   return !((s = lineSegment_ccw(seg.xa, seg.ya, seg.xb, seg.yb, box.x0, box.y0))
