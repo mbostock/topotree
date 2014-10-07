@@ -1,18 +1,17 @@
 import "node";
 import "leaf";
 
-// TODO support quantized, delta-encoded arcs
-// TODO group arcs based on connectedness!
-function tree(topology) {
-  return tree_group(topology.arcs.map(function(arc) {
+// TODO group lines more intelligently based on connectedness / proximity?
+function tree(lines) {
+  return tree_group(lines.map(function(line) {
     var i = 0,
-        n = arc.length,
+        n = line.length,
         p0,
-        p1 = arc[0],
+        p1 = line[0],
         children = new Array(n - 1);
 
     while (++i < n) {
-      p0 = p1, p1 = arc[i];
+      p0 = p1, p1 = line[i];
       children[i - 1] = new Leaf(p0, p1);
     }
 
