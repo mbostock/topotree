@@ -1,11 +1,16 @@
 import "intersect-segment-segment";
 
-function Leaf(point0, point1) {
-  this.coordinates = [point0, point1];
-  this.extent = [
-    [Math.min(point0[0], point1[0]), Math.min(point0[1], point1[1])],
-    [Math.max(point0[0], point1[0]), Math.max(point0[1], point1[1])]
-  ];
+function Leaf(a, b) {
+  var a0 = a[0], a1 = a[1],
+      b0 = b[0], b1 = b[1],
+      t;
+
+  // Computing bounding box of AB.
+  if (a0 > b0) t = a0, a0 = b0, b0 = t;
+  if (a1 > b1) t = a1, a1 = b1, b1 = t;
+
+  this.coordinates = [a, b];
+  this.extent = [[a0, a1], [b0, b1]];
 }
 
 Leaf.prototype = {
