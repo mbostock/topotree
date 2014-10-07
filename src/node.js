@@ -1,5 +1,7 @@
-import "intersect";
-import "distance";
+import "intersect-segment-segment";
+import "intersect-box-segment";
+import "distance-point-box";
+import "distance-point-segment";
 import "heap";
 
 function Node(child0, child1) {

@@ -1,4 +1,4 @@
-import "intersect";
+import "intersect-segment-segment";
 
 function Leaf(point0, point1) {
   this.coordinates = [point0, point1];
