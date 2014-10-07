@@ -21,26 +21,26 @@ suite.addBatch({
       assert.deepEqual(new Leaf([3, 4], [1, 2]).extent, [[1, 2], [3, 4]]);
     },
 
-    "nearest returns the leaf": function(Leaf) {
+    "leafNearestToPoint returns the leaf": function(Leaf) {
       var l = new Leaf([1, 2], [3, 4]);
-      assert.equal(l, l.nearest([0, 0]));
-      assert.equal(l, l.nearest([0, 1]));
-      assert.equal(l, l.nearest([2, 3]));
+      assert.equal(l, l.leafNearestToPoint([0, 0]));
+      assert.equal(l, l.leafNearestToPoint([0, 1]));
+      assert.equal(l, l.leafNearestToPoint([2, 3]));
     },
 
-    "intersections returns the single leaf when the line segments intersect": function(Leaf) {
+    "leavesIntersectingSegment returns the single leaf when the line segments intersect": function(Leaf) {
       var l = new Leaf([0, 0], [1, 1]);
-      assert.deepEqual([l], l.intersections([1, 0], [0, 1]));
+      assert.deepEqual([l], l.leavesIntersectingSegment([1, 0], [0, 1]));
     },
 
-    "intersections returns the single leaf when the line segments share an endpoint": function(Leaf) {
+    "leavesIntersectingSegment returns the single leaf when the line segments share an endpoint": function(Leaf) {
       var l = new Leaf([0, 0], [1, 1]);
-      assert.deepEqual([l], l.intersections([0, 0], [-1, 0]));
+      assert.deepEqual([l], l.leavesIntersectingSegment([0, 0], [-1, 0]));
     },
 
-    "intersections returns the empty array when the line segments do not intersect": function(Leaf) {
+    "leavesIntersectingSegment returns the empty array when the line segments do not intersect": function(Leaf) {
       var l = new Leaf([0, 0], [1, 1]);
-      assert.deepEqual([], l.intersections([0, 1], [1, 2]));
+      assert.deepEqual([], l.leavesIntersectingSegment([0, 1], [1, 2]));
     }
   }
 });

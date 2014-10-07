@@ -17,12 +17,12 @@ function Node(child0, child1) {
 Node.prototype = {
   extent: null,
   children: null,
-  nearest: node_nearest,
-  intersections: node_intersections
+  leafNearestToPoint: node_leafNearestToPoint,
+  leavesIntersectingSegment: node_leavesIntersectingSegment
 };
 
 // accumulates intersections with line segment AB
-function node_intersections(a, b) {
+function node_leavesIntersectingSegment(a, b) {
   var intersections = [];
 
   (function intersectNode(node) {
@@ -40,19 +40,19 @@ function node_intersections(a, b) {
   return intersections;
 }
 
-function node_nearest(point) {
+function node_leafNearestToPoint(point) {
   var nearestNode,
       nearestDistance = Infinity,
       node = this,
-      distance = node_distance(node, point),
+      distance = node_distanceToPoint(node, point),
       candidates = heap(node_ascendingDistance),
       candidate = {d: distance, n: node};
 
   do {
     if ((node = candidate.n).children) {
-      candidates.push({d: node_distance(node.children[0], point), n: node.children[0]});
-      candidates.push({d: node_distance(node.children[1], point), n: node.children[1]});
-    } else if ((distance = node_distance(node, point)) < nearestDistance) {
+      candidates.push({d: node_distanceToPoint(node.children[0], point), n: node.children[0]});
+      candidates.push({d: node_distanceToPoint(node.children[1], point), n: node.children[1]});
+    } else if ((distance = node_distanceToPoint(node, point)) < nearestDistance) {
       nearestNode = node;
       nearestDistance = distance;
     }
@@ -61,7 +61,7 @@ function node_nearest(point) {
   return nearestNode;
 }
 
-function node_distance(node, point) {
+function node_distanceToPoint(node, point) {
   return node.children
       ? distancePointBox(point, node.extent[0], node.extent[1])
       : distancePointSegment(point, node.coordinates[0], node.coordinates[1]);

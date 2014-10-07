@@ -29,25 +29,25 @@ suite.addBatch({
       assert.deepEqual([[0, 0], [3, 4]], new _.Node(new _.Leaf([1, 1], [1, 2]), new _.Leaf([0, 4], [3, 0])).extent);
     },
 
-    "nearest returns the nearest leaf to the specified point": function(_) {
+    "leafNearestToPoint returns the leaf nearest to the specified point": function(_) {
       var l0 = new _.Leaf([0, 0], [1, 1]),
           l1 = new _.Leaf([1, 2], [3, 4]),
           n = new _.Node(l0, l1);
-      assert.deepEqual(l0, n.nearest([0, -1]));
-      assert.deepEqual(l0, n.nearest([0, 0]));
-      assert.deepEqual(l0, n.nearest([0, .5]));
-      assert.deepEqual(l0, n.nearest([1, 1.5 - ε]));
-      assert.deepEqual(l1, n.nearest([1, 1.5 + ε]));
-      assert.deepEqual(l1, n.nearest([1, 2]));
+      assert.deepEqual(l0, n.leafNearestToPoint([0, -1]));
+      assert.deepEqual(l0, n.leafNearestToPoint([0, 0]));
+      assert.deepEqual(l0, n.leafNearestToPoint([0, .5]));
+      assert.deepEqual(l0, n.leafNearestToPoint([1, 1.5 - ε]));
+      assert.deepEqual(l1, n.leafNearestToPoint([1, 1.5 + ε]));
+      assert.deepEqual(l1, n.leafNearestToPoint([1, 2]));
     },
 
-    "intersections returns the leaves that intersect the specified line segment": function(_) {
+    "leavesIntersectingSegment returns the leaves that intersect the specified line segment": function(_) {
       var l0 = new _.Leaf([0, 0], [1, 1]),
           l1 = new _.Leaf([1, 2], [3, 4]),
           n = new _.Node(l0, l1);
-      assert.deepEqual([], n.intersections([0, 1], [0, 2]).sort(leafOrder));
-      assert.deepEqual([l0], n.intersections([0, 0], [4, 4]).sort(leafOrder));
-      assert.deepEqual([l0, l1], n.intersections([0, 0], [3, 4]).sort(leafOrder));
+      assert.deepEqual([], n.leavesIntersectingSegment([0, 1], [0, 2]).sort(leafOrder));
+      assert.deepEqual([l0], n.leavesIntersectingSegment([0, 0], [4, 4]).sort(leafOrder));
+      assert.deepEqual([l0, l1], n.leavesIntersectingSegment([0, 0], [3, 4]).sort(leafOrder));
     }
   }
 });

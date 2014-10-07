@@ -16,14 +16,14 @@ function Leaf(a, b) {
 Leaf.prototype = {
   extent: null,
   coordinates: null,
-  nearest: leaf_nearest,
-  intersections: leaf_intersections
+  leafNearestToPoint: leaf_leafNearestToPoint,
+  leavesIntersectingSegment: leaf_leavesIntersectingSegment
 };
 
-function leaf_intersections(a, b) {
+function leaf_leavesIntersectingSegment(a, b) {
   return intersectSegmentSegment(this.coordinates[0], this.coordinates[1], a, b) ? [this] : [];
 }
 
-function leaf_nearest() {
+function leaf_leafNearestToPoint() {
   return this;
 }
