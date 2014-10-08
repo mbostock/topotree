@@ -11,20 +11,11 @@ Tree.prototype = {
 };
 
 function tree_leaves() {
-  var leaves = [],
-      node,
-      nodes = [this.root];
+  return this.filter(tree_true);
+}
 
-  while ((node = nodes.pop()) != null) {
-    if (node.children) {
-      var i = -1, n = node.children.length;
-      while (++i < n) nodes.push(node.children[i]);
-    } else {
-      leaves.push(node);
-    }
-  }
-
-  return leaves;
+function tree_true() {
+  return true;
 }
 
 function tree_filter(filter) {
