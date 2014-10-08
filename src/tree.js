@@ -1,24 +1,9 @@
 import "heap";
 
-// node.merge(other) - returns a new node representing the union of node and other
-// node.intersects(other) - returns true iff this node intersects the other node
+// Node API:
+// node.merge(node) - returns a new node representing the union of this node and the other node
+// node.intersects(node) - returns true iff this node intersects the other node
 // node.distance(object) - returns the distance from the node to the specified object (arbitrary units)
-
-function tree(nodes) {
-  var i0,
-      i1,
-      n0,
-      nodes1;
-
-  while ((n0 = nodes.length) > 1) {
-    nodes1 = new Array(Math.ceil(n0 / 2));
-    for (i0 = 0, i1 = 0; i0 < n0 - 1; i0 += 2, i1 += 1) nodes1[i1] = nodes[i0].merge(nodes[i0 + 1]);
-    if (i0 < n0) nodes1[i1] = nodes[i0];
-    nodes = nodes1;
-  }
-
-  return new Tree(nodes[0]);
-}
 
 function Tree(root) {
   this.root = root;
@@ -41,18 +26,18 @@ function tree_leaves() {
   return leaves;
 }
 
-function tree_nearest(point) {
+function tree_nearest(object) {
   var nearestNode,
       nearestDistance = Infinity,
       node = this.root,
-      distance = node.distance(point),
+      distance = node.distance(object),
       candidates = heap(tree_ascendingDistance),
       candidate = {d: distance, n: node};
 
   do {
     if ((node = candidate.n).children) {
-      node.children.forEach(function(c) { candidates.push({d: c.distance(point), n: c}); });
-    } else if ((distance = node.distance(point)) < nearestDistance) {
+      node.children.forEach(function(c) { candidates.push({d: c.distance(object), n: c}); });
+    } else if ((distance = node.distance(object)) < nearestDistance) {
       nearestNode = node, nearestDistance = distance;
     }
   } while ((candidate = candidates.pop()) && candidate.d < nearestDistance);

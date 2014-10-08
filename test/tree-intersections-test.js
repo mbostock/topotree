@@ -9,16 +9,16 @@ var ε = 1e-6;
 suite.addBatch({
   "tree.intersections": {
     topic: function() {
-      smash.load(["src/tree.js", "src/line-segment.js"], "{tree: tree, lineSegment: lineSegment}", {console: console}, this.callback);
+      smash.load(["src/index.js"], "tree", {console: console}, this.callback);
     },
 
-    "returns the leaf nodes that intersect the specified node": function(_) {
-      var l0 = _.lineSegment(0, 0, 1, 1),
-          l1 = _.lineSegment(1, 2, 3, 4),
-          t = _.tree([l0, l1]);
-      assert.deepEqual([], t.intersections(_.lineSegment(0, 1, 0, 2)).sort(leafOrder));
-      assert.deepEqual([l0], t.intersections(_.lineSegment(0, 0, 4, 4)).sort(leafOrder));
-      assert.deepEqual([l0, l1], t.intersections(_.lineSegment(0, 0, 3, 4)).sort(leafOrder));
+    "returns the leaf nodes that intersect the specified node": function(tree) {
+      var t = tree.fromLine([[0, 0], [1, 1], [3, 4]]),
+          l0 = tree.lineSegment(0, 0, 1, 1), // TODO a better API
+          l1 = tree.lineSegment(1, 1, 3, 4);
+      assert.deepEqual(t.intersections(tree.lineSegment(0, 1, 0, 2)).sort(leafOrder), []);
+      assert.deepEqual(t.intersections(tree.lineSegment(1, 0, 0, 1)).sort(leafOrder), [l0]);
+      assert.deepEqual(t.intersections(tree.lineSegment(0, 0, 3, 4)).sort(leafOrder), [l0, l1]);
     }
   }
 });

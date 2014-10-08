@@ -1,3 +1,26 @@
+function lineSegment_tree(line) {
+  var nodes = [],
+      p0,
+      p1 = line[0],
+      i0 = 0,
+      i1,
+      n0 = line.length;
+
+  while (++i0 < n0) {
+    p0 = p1, p1 = line[i0];
+    nodes.push(lineSegment(p0[0], p0[1], p1[0], p1[1]));
+  }
+
+  while ((n0 = nodes.length) > 1) {
+    nodes1 = new Array(Math.ceil(n0 / 2));
+    for (i0 = 0, i1 = 0; i0 < n0 - 1; i0 += 2, i1 += 1) nodes1[i1] = nodes[i0].merge(nodes[i0 + 1]);
+    if (i0 < n0) nodes1[i1] = nodes[i0];
+    nodes = nodes1;
+  }
+
+  return nodes[0];
+}
+
 function lineSegment(xa, ya, xb, yb) {
   var x0 = xa, y0 = ya,
       x1 = xb, y1 = yb,
@@ -66,7 +89,7 @@ function lineSegment_distanceSegment(seg, point) {
 
 function lineSegment_intersects(that) {
   return that.x0 > this.x1 || that.x1 < this.x0 || that.y0 > this.y1 || that.y1 < this.y0 ? false // non-overlapping bounding boxes
-      : this.children && that.children ? true // overlapping bounding boxes
+      : this.children && that.children ? true // overlapping bounding boxes, non-leaf nodes
       : this.children ? lineSegment_intersectsBoxSegment(this, that)
       : that.children ? lineSegment_intersectsBoxSegment(that, this)
       : lineSegment_intersectsSegmentSegment(this, that);
