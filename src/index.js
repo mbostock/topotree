@@ -1,14 +1,13 @@
 (function() {
 
-import "tree";
+import "box";
 import "line-segment";
 
 this.tree = {
+  box: box,
   lineSegment: lineSegment,
-
-  // TODO something smarter
-  fromLines: function(lines) { return new Tree(lines.map(lineSegment_tree)); },
-  fromLine: function(line) { return new Tree(lineSegment_tree(line)); }
+  fromLines: lineSegment_treeFromLines,
+  fromLine: lineSegment_treeFromLine
 };
 
 })();
