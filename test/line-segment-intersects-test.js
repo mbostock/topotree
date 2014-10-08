@@ -7,66 +7,9 @@ var suite = vows.describe("lineSegment.intersects");
 var ε = 1e-6;
 
 suite.addBatch({
-  "intersect boxes": {
-    topic: function() {
-      smash.load(["src/line-segment.js"], "lineSegment_box", {console: console}, this.callback);
-    },
-
-    //
-    // A---+ C---+
-    // |   | |   |
-    // |   | |   |
-    // |   | |   |
-    // +---B +---D
-    //
-    "returns false for non-overlapping boxes": function(box) {
-      assert.equal(box(0, 0, 1, 1).intersects(box(2, 0, 2, 1)), false);
-      assert.equal(box(0, 0, 1, 1).intersects(box(1 + ε, 0, 1 + ε, 1)), false);
-    },
-
-    //
-    // A--C-+--+
-    // |  | |  |
-    // |  | |  |
-    // |  | |  |
-    // +--+-B--D
-    //
-    "returns true for overlapping boxes": function(box) {
-      assert.equal(box(0, 0, 1, 1).intersects(box(1 - ε, 0, 1 - ε, 1)), true);
-    },
-
-    //
-    // A---C---+
-    // |   |   |
-    // |   |   |
-    // |   |   |
-    // +---B---D
-    //
-    "returns true for boxes that share an edge": function(box) {
-      assert.equal(box(0, 0, 1, 1).intersects(box(1, 0, 2, 1)), true);
-      assert.equal(box(0, 0, 1, 1).intersects(box(0, 1, 1, 2)), true);
-    },
-
-    //
-    // A---+
-    // |   |
-    // |   |
-    // |   |
-    // +--CB---+
-    //     |   |
-    //     |   |
-    //     |   |
-    //     +---D
-    //
-    "returns true for boxes that share a corner": function(box) {
-      assert.equal(box(0, 0, 1, 1).intersects(box(1, 1, 2, 2)), true);
-      assert.equal(box(0, 0, 1, 1).intersects(box(1, -1, 2, 0)), true);
-    }
-  },
-
   "intersect box & segment": {
     topic: function() {
-      smash.load(["src/line-segment.js"], "{lineSegment: lineSegment, box: lineSegment_box}", {console: console}, this.callback);
+      smash.load(["src/index.js"], "tree", {console: console}, this.callback);
     },
 
     //
@@ -78,17 +21,19 @@ suite.addBatch({
     //
     // C---D
     //
+    // Note: depends on the bounding box not intersecting!
+    //
     "returns false for a line segment outside the box": function(_) {
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(0, 1 + ε, 1, 1 + ε)), false);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(0, 2, 1, 2)), false);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(0, -ε, 1, -ε)), false);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(0, -1, 1, -1)), false);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(-1, 0, -1, 1)), false);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(2, 0, 2, 1)), false);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1, -ε, 0, -ε)), false);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1 + ε, 0, 1 + ε, 1)), false);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1 + ε, 1, 1 + ε, 0)), false);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1 + ε, 0, 2, 0)), false);
+      assert.equal(_.lineSegment(0, 1 + ε, 1, 1 + ε).box().intersects(_.box(0, 0, 1, 1)), false);
+      assert.equal(_.lineSegment(0, 2, 1, 2).box().intersects(_.box(0, 0, 1, 1)), false);
+      assert.equal(_.lineSegment(0, -ε, 1, -ε).box().intersects(_.box(0, 0, 1, 1)), false);
+      assert.equal(_.lineSegment(0, -1, 1, -1).box().intersects(_.box(0, 0, 1, 1)), false);
+      assert.equal(_.lineSegment(-1, 0, -1, 1).box().intersects(_.box(0, 0, 1, 1)), false);
+      assert.equal(_.lineSegment(2, 0, 2, 1).box().intersects(_.box(0, 0, 1, 1)), false);
+      assert.equal(_.lineSegment(1, -ε, 0, -ε).box().intersects(_.box(0, 0, 1, 1)), false);
+      assert.equal(_.lineSegment(1 + ε, 0, 1 + ε, 1).box().intersects(_.box(0, 0, 1, 1)), false);
+      assert.equal(_.lineSegment(1 + ε, 1, 1 + ε, 0).box().intersects(_.box(0, 0, 1, 1)), false);
+      assert.equal(_.lineSegment(1 + ε, 0, 2, 0).box().intersects(_.box(0, 0, 1, 1)), false);
     },
 
     //
@@ -99,15 +44,15 @@ suite.addBatch({
     // +---B
     //
     "returns true for a line segment inside the box": function(_) {
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(0, ε, 1, ε)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(0, .5, 1, .5)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(.5, 0, .5, 1)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(0, 0, 1, 1)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(ε, ε, 1 - ε, 1 - ε)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(-ε, -ε, 1 + ε, 1 + ε)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1, 1, 0, 0)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(0, 1, 1, 0)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1, 0, 0, 1)), true);
+      assert.equal(_.lineSegment(0, ε, 1, ε).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(0, .5, 1, .5).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(.5, 0, .5, 1).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(0, 0, 1, 1).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(ε, ε, 1 - ε, 1 - ε).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(-ε, -ε, 1 + ε, 1 + ε).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(1, 1, 0, 0).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(0, 1, 1, 0).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(1, 0, 0, 1).intersects(_.box(0, 0, 1, 1)), true);
     },
 
     //
@@ -117,14 +62,14 @@ suite.addBatch({
     // +---B
     //
     "returns true for a line segment adjacent to a box edge": function(_) {
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(0, 0, 1, 0)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(0, ε, 1, ε)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1, 0, 0, 0)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1, ε, 0, ε)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1, 0, 1, 1)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1 - ε, 0, 1 - ε, 1)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1, 1, 1, 0)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1 - ε, 1, 1 - ε, 0)), true);
+      assert.equal(_.lineSegment(0, 0, 1, 0).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(0, ε, 1, ε).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(1, 0, 0, 0).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(1, ε, 0, ε).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(1, 0, 1, 1).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(1 - ε, 0, 1 - ε, 1).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(1, 1, 1, 0).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(1 - ε, 1, 1 - ε, 0).intersects(_.box(0, 0, 1, 1)), true);
     },
 
     //
@@ -134,9 +79,9 @@ suite.addBatch({
     // +---B
     //
     "returns true for a line segment touching a box corner": function(_) {
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1, 0, 2, 0)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(0, 0, -1, 0)), true);
-      assert.equal(_.box(0, 0, 1, 1).intersects(_.lineSegment(1 - ε, 0, 2, 0)), true);
+      assert.equal(_.lineSegment(1, 0, 2, 0).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(0, 0, -1, 0).intersects(_.box(0, 0, 1, 1)), true);
+      assert.equal(_.lineSegment(1 - ε, 0, 2, 0).intersects(_.box(0, 0, 1, 1)), true);
     }
   },
 
@@ -152,16 +97,18 @@ suite.addBatch({
     // |   |
     // B   D
     //
+    // Note: depends on the bounding box not intersecting!
+    //
     "returns false for two line segments with a separating axis": function(lineSegment) {
-      assert.equal(lineSegment(0, 0, 0, 1).intersects(lineSegment(1, 0, 1, 1)), false);
-      assert.equal(lineSegment(0, 0, 0, 1).intersects(lineSegment(ε, 0, ε, 1)), false);
-      assert.equal(lineSegment(0, 0, 0, 1).intersects(lineSegment(-1, 0, -1, 1)), false);
-      assert.equal(lineSegment(0, 0, 0, 1).intersects(lineSegment(-ε, 0, -ε, 1)), false);
-      assert.equal(lineSegment(0, 0, 0, 1).intersects(lineSegment(0, -1, 1, -1)), false);
-      assert.equal(lineSegment(0, 0, 0, 1).intersects(lineSegment(0, -ε, 1, -ε)), false);
-      assert.equal(lineSegment(0, 0, 0, 1).intersects(lineSegment(0, 1 + ε, 1, 1 + ε)), false);
-      assert.equal(lineSegment(0, 0, 0, 1).intersects(lineSegment(0, 2, 1, 2)), false);
-      assert.equal(lineSegment(0, 0, 1, 1).intersects(lineSegment(0, 3, 1, 2)), false);
+      assert.equal(lineSegment(0, 0, 0, 1).box().intersects(lineSegment(1, 0, 1, 1).box()), false);
+      assert.equal(lineSegment(0, 0, 0, 1).box().intersects(lineSegment(ε, 0, ε, 1).box()), false);
+      assert.equal(lineSegment(0, 0, 0, 1).box().intersects(lineSegment(-1, 0, -1, 1).box()), false);
+      assert.equal(lineSegment(0, 0, 0, 1).box().intersects(lineSegment(-ε, 0, -ε, 1).box()), false);
+      assert.equal(lineSegment(0, 0, 0, 1).box().intersects(lineSegment(0, -1, 1, -1).box()), false);
+      assert.equal(lineSegment(0, 0, 0, 1).box().intersects(lineSegment(0, -ε, 1, -ε).box()), false);
+      assert.equal(lineSegment(0, 0, 0, 1).box().intersects(lineSegment(0, 1 + ε, 1, 1 + ε).box()), false);
+      assert.equal(lineSegment(0, 0, 0, 1).box().intersects(lineSegment(0, 2, 1, 2).box()), false);
+      assert.equal(lineSegment(0, 0, 1, 1).box().intersects(lineSegment(0, 3, 1, 2).box()), false);
     },
 
     //
@@ -222,9 +169,11 @@ suite.addBatch({
     //
     // A---B   C---D
     //
+    // Note: depends on the bounding box not intersecting!
+    //
     "returns false for two line segments that are collinear and overlap": function(lineSegment) {
-      assert.equal(lineSegment(0, 0, 1, 0).intersects(lineSegment(1 + ε, 0, 2, 0)), false);
-      assert.equal(lineSegment(0, 0, 1, 0).intersects(lineSegment(2, 0, 1 + ε, 0)), false);
+      assert.equal(lineSegment(0, 0, 1, 0).box().intersects(lineSegment(1 + ε, 0, 2, 0).box()), false);
+      assert.equal(lineSegment(0, 0, 1, 0).box().intersects(lineSegment(2, 0, 1 + ε, 0).box()), false);
     },
 
     //

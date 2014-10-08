@@ -18,12 +18,12 @@ suite.addBatch({
       assert.equal(seg.yb, 4);
     },
 
-    "stores the bounding box as [x0, y0] -> [x1, y1]": function(lineSegment) {
-      var seg = lineSegment(4, 3, 2, 1);
-      assert.equal(seg.x0, 2);
-      assert.equal(seg.y0, 1);
-      assert.equal(seg.x1, 4);
-      assert.equal(seg.y1, 3);
+    "box returns the bounding box": function(lineSegment) {
+      var box = lineSegment(4, 3, 2, 1).box();
+      assert.equal(box.x0, 2);
+      assert.equal(box.y0, 1);
+      assert.equal(box.x1, 4);
+      assert.equal(box.y1, 3);
     }
   }
 });

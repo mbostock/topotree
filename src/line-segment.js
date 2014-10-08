@@ -11,7 +11,7 @@ function lineSegment_treeFromLine(line) {
 }
 
 function lineSegment_boxesFromLine(line) {
-  var nodes = [],
+  var boxes = [],
       p0,
       p1 = line[0],
       i = 0,
@@ -19,10 +19,10 @@ function lineSegment_boxesFromLine(line) {
 
   while (++i < n) {
     p0 = p1, p1 = line[i];
-    nodes.push(lineSegment_box(lineSegment(p0[0], p0[1], p1[0], p1[1])));
+    boxes.push(lineSegment(p0[0], p0[1], p1[0], p1[1]).box());
   }
 
-  return nodes;
+  return boxes;
 }
 
 function lineSegment_treeFromBoxes(boxes) {
@@ -50,17 +50,18 @@ function LineSegment(xa, ya, xb, yb) {
 }
 
 LineSegment.prototype = {
+  box: lineSegment_box,
   distance: lineSegment_distance,
   intersects: lineSegment_intersects
 };
 
-function lineSegment_box(seg) {
-  var x0 = seg.xa, y0 = seg.ya,
-      x1 = seg.xb, y1 = seg.yb,
+function lineSegment_box() {
+  var x0 = this.xa, y0 = this.ya,
+      x1 = this.xb, y1 = this.yb,
       t;
   if (x0 > x1) t = x0, x0 = x1, x1 = t;
   if (y0 > y1) t = y0, y0 = y1, y1 = t;
-  return new Box(x0, y0, x1, y1, [seg]);
+  return new Box(x0, y0, x1, y1, [this]);
 }
 
 function lineSegment_distance(point) {
