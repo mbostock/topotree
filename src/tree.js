@@ -1,18 +1,13 @@
 import "heap";
 
-// Node API:
-// node.merge(node) - returns a new node representing the union of this node and the other node
-// node.intersects(node) - returns true iff this node intersects the other node
-// node.distance(object) - returns the distance from the node to the specified object (arbitrary units)
-
 function Tree(root) {
   this.root = root;
 }
 
 Tree.prototype = {
   leaves: tree_leaves,
-  nearest: tree_nearest,
-  intersections: tree_intersections
+  search: tree_search,
+  filter: tree_filter
 };
 
 function tree_leaves() {
@@ -26,38 +21,38 @@ function tree_leaves() {
   return leaves;
 }
 
-function tree_nearest(object) {
-  var nearestNode,
-      nearestDistance = Infinity,
-      node = this.root,
-      distance = node.distance(object),
-      candidates = heap(tree_ascendingDistance),
-      candidate = {d: distance, n: node};
+function tree_filter(filter) {
+  var leaves = [];
 
-  do {
-    if ((node = candidate.n).children) {
-      node.children.forEach(function(c) { candidates.push({d: c.distance(object), n: c}); });
-    } else if ((distance = node.distance(object)) < nearestDistance) {
-      nearestNode = node, nearestDistance = distance;
-    }
-  } while ((candidate = candidates.pop()) && candidate.d < nearestDistance);
-
-  return nearestNode;
-}
-
-function tree_intersections(leaf) { // TODO intersections with non-leaf nodes
-  var intersections = [];
-
-  (function intersect(node) {
-    if (node.intersects(leaf)) {
-      if (node.children) node.children.forEach(intersect);
-      else intersections.push(node);
+  (function filterChild(node) {
+    if (filter(node)) {
+      if (node.children) node.children.forEach(filterChild);
+      else leaves.push(node);
     }
   })(this.root);
 
-  return intersections;
+  return leaves;
 }
 
-function tree_ascendingDistance(a, b) {
-  return a.d - b.d;
+function tree_search(score) {
+  var minNode,
+      minScore = Infinity,
+      candidateNode = this.root,
+      candidateScore = score(candidateNode),
+      candidates = heap(tree_ascendingScore),
+      candidate = {s: candidateScore, n: candidateNode};
+
+  do {
+    if ((candidateNode = candidate.n).children) {
+      candidateNode.children.forEach(function(c) { candidates.push({s: score(c), n: c}); });
+    } else if ((candidateScore = score(candidateNode)) < minScore) {
+      minNode = candidateNode, minScore = candidateScore;
+    }
+  } while ((candidate = candidates.pop()) && candidate.s < minScore);
+
+  return minNode;
+}
+
+function tree_ascendingScore(a, b) {
+  return a.s - b.s;
 }
