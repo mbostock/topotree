@@ -79,9 +79,7 @@ function lineSegment_distance(point) {
 }
 
 function lineSegment_intersects(that) {
-  return that.children
-      ? lineSegment_intersectsBox(this, that)
-      : lineSegment_intersectsSegment(this, that);
+  return (that.children ? lineSegment_intersectsBox : lineSegment_intersectsSegment)(this, that);
 }
 
 // Note: requires that seg and box have overlapping bounding boxes!
