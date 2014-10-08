@@ -4,8 +4,6 @@ var smash = require("smash"),
 
 var suite = vows.describe("box.merge");
 
-var ε = 1e-6;
-
 suite.addBatch({
   "box.merge": {
     topic: function() {
