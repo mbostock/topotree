@@ -7,7 +7,8 @@ function Tree(root) {
 Tree.prototype = {
   leaves: tree_leaves,
   search: tree_search,
-  filter: tree_filter
+  filter: tree_filter,
+  intersect: tree_intersect
 };
 
 function tree_leaves() {
@@ -35,6 +36,23 @@ function tree_filter(filter) {
   }
 
   return leaves;
+}
+
+function tree_intersect(tree, intersect) {
+  var intersections = [];
+
+  (function intersectChild(A, B, depth) {
+    var a, b;
+    if (depth & 1) a = A, b = B;
+    else a = B, b = A;
+    if (intersect(A, B)) {
+      if (A.children) for (var i = 0, n = A.children.length; i < n; ++i) intersectChild(B, A.children[i]);
+      else if (B.children) for (var i = 0, n = B.children.length; i < n; ++i) intersectChild(B.children[i], A);
+      else intersections.push([a, b]);
+    }
+  })(this.root, tree.root, 0);
+
+  return intersections;
 }
 
 function tree_search(score) {
