@@ -22,14 +22,20 @@ function tree_leaves() {
 }
 
 function tree_filter(filter) {
-  var leaves = [];
+  var leaves = [],
+      node,
+      nodes = [this.root];
 
-  (function filterChild(node) {
+  while ((node = nodes.pop()) != null) {
     if (filter(node)) {
-      if (node.children) node.children.forEach(filterChild);
-      else leaves.push(node);
+      if (node.children) {
+        var i = -1, n = node.children.length;
+        while (++i < n) nodes.push(node.children[i]);
+      } else {
+        leaves.push(node);
+      }
     }
-  })(this.root);
+  }
 
   return leaves;
 }
