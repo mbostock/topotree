@@ -25,12 +25,14 @@ suite.addBatch({
       assert.deepEqual([0, 0, 3, 4], extent(box(1, 1, 1, 2, []).merge(box(0, 0, 3, 4, []))));
     },
 
-    "merges in-place when the bounding box of one subsumes the other": function(box) {
+    "merges in-place when the bounding box of this subsumes that": function(box) {
       var b0 = box(0, 0, 3, 3, []),
           b1 = box(1, 1, 2, 2, []);
       assert.deepEqual(b0, b0.merge(b1));
       assert.deepEqual([b1], b0.children);
+    },
 
+    "merges in-place when the bounding box of that subsumes this": function(box) {
       var b0 = box(0, 0, 3, 3, []),
           b1 = box(1, 1, 2, 2, []);
       assert.deepEqual(b0, b1.merge(b0));
