@@ -11,12 +11,18 @@ Tree.prototype = {
 };
 
 function tree_leaves() {
-  var leaves = [];
+  var leaves = [],
+      node,
+      nodes = [this.root];
 
-  (function visit(node) {
-    if (node.children) node.children.forEach(visit);
-    else leaves.push(node);
-  })(this.root);
+  while ((node = nodes.pop()) != null) {
+    if (node.children) {
+      var i = -1, n = node.children.length;
+      while (++i < n) nodes.push(node.children[i]);
+    } else {
+      leaves.push(node);
+    }
+  }
 
   return leaves;
 }
