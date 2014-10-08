@@ -11,17 +11,12 @@ function lineSegment_treeFromLine(line) {
 }
 
 function lineSegment_boxesFromLine(line) {
-  var boxes = [],
-      p0,
+  var p0,
       p1 = line[0],
       i = 0,
-      n = line.length;
-
-  while (++i < n) {
-    p0 = p1, p1 = line[i];
-    boxes.push(lineSegment(p0[0], p0[1], p1[0], p1[1]).box());
-  }
-
+      n = line.length,
+      boxes = new Array(n - 1);
+  while (++i < n) p0 = p1, p1 = line[i], boxes[i - 1] = lineSegment(p0[0], p0[1], p1[0], p1[1]).box();
   return boxes;
 }
 
