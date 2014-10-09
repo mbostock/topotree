@@ -19,10 +19,8 @@ function lineSegment_treeFromLines(lines) {
   }
 
   function bound(boxes) {
-    var x0 = Infinity,
-        x1 = -Infinity,
-        y0 = Infinity,
-        y1 = -Infinity,
+    var x0 = Infinity, y0 = Infinity,
+        x1 = -Infinity, y1 = -Infinity,
         i = -1,
         n = boxes.length,
         box;
@@ -30,8 +28,8 @@ function lineSegment_treeFromLines(lines) {
     while (++i < n) {
       box = boxes[i];
       if (box.x0 < x0) x0 = box.x0;
-      if (box.x1 > x1) x1 = box.x1;
       if (box.y0 < y0) y0 = box.y0;
+      if (box.x1 > x1) x1 = box.x1;
       if (box.y1 > y1) y1 = box.y1;
     }
 
@@ -41,7 +39,7 @@ function lineSegment_treeFromLines(lines) {
   return new Tree((function split(children, depth) {
     var n = children.length;
     if (n < 10) return bound(children);
-    children.sort(++depth & 1 ? function(a, b) { return a.x0 - b.x0; } : function(a, b) { return a.y0 - b.y0; });
+    children.sort(++depth & 1 ? lineSegment_ascendingX : lineSegment_ascendingY);
     var n0 = n >> 1;
     return split(children.slice(0, n0), depth).merge(split(children.slice(n0), depth));
   })(boxes, 0));
@@ -112,6 +110,14 @@ function lineSegment_distance(point) {
   else dx = this.xa + t * dx, dy = this.ya + t * dy;
   dx -= x, dy -= y;
   return dx * dx + dy * dy;
+}
+
+function lineSegment_ascendingX(a, b) {
+  return a.x0 - b.x0;
+}
+
+function lineSegment_ascendingY(a, b) {
+  return a.y0 - b.y0;
 }
 
 function lineSegment_intersects(that) {
