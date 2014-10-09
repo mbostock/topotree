@@ -36,12 +36,11 @@ function lineSegment_treeFromLines(lines) {
     return new Box(x0, y0, x1, y1, boxes);
   }
 
-  return new Tree((function split(children, depth) {
-    var n = children.length;
-    if (n < 10) return bound(children);
-    children.sort(++depth & 1 ? lineSegment_ascendingX : lineSegment_ascendingY);
-    var n0 = n >> 1;
-    return split(children.slice(0, n0), depth).merge(split(children.slice(n0), depth));
+  return new Tree((function split(children) {
+    var box = bound(children), n = children.length;
+    if (n < 10) return box;
+    children.sort(box.x1 - box.x0 > box.y1 - box.y0 ? lineSegment_ascendingX : lineSegment_ascendingY);
+    return split(children.slice(0, n >>= 1)).merge(split(children.slice(n)));
   })(boxes, 0));
 }
 
