@@ -37,10 +37,9 @@ function lineSegment_treeFromLines(lines) {
   }
 
   return new Tree((function split(children) {
-    var box = bound(children), n = children.length;
-    if (n < 10) return box;
-    children.sort(box.x1 - box.x0 > box.y1 - box.y0 ? lineSegment_ascendingX : lineSegment_ascendingY);
-    return split(children.slice(0, n >>= 1)).merge(split(children.slice(n)));
+    var box = bound(children),
+        n = children.length;
+    return n < 10 ? box : split(children.sort(box.x1 - box.x0 > box.y1 - box.y0 ? lineSegment_ascendingX : lineSegment_ascendingY).slice(0, n >>= 1)).merge(split(children.slice(n)));
   })(boxes, 0));
 }
 
