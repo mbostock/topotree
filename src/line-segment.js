@@ -1,9 +1,50 @@
 import "box";
 import "tree";
 
-// TODO something smarter
 function lineSegment_treeFromLines(lines) {
-  return new Tree(lineSegment_treeFromBoxes(lines.map(function(line) { return lineSegment_treeFromBoxes(lineSegment_boxesFromLine(line)); })));
+  var boxes = [],
+      i = -1,
+      n = lines.length;
+
+  while (++i < n) {
+    var line = lines[i],
+        j = 0,
+        m = line.length,
+        p0,
+        p1 = line[0];
+
+    while (++j < m) {
+      p0 = p1, p1 = line[j], boxes.push(lineSegment(p0[0], p0[1], p1[0], p1[1]).box());
+    }
+  }
+
+  function bound(boxes) {
+    var x0 = Infinity,
+        x1 = -Infinity,
+        y0 = Infinity,
+        y1 = -Infinity,
+        i = -1,
+        n = boxes.length,
+        box;
+
+    while (++i < n) {
+      box = boxes[i];
+      if (box.x0 < x0) x0 = box.x0;
+      if (box.x1 > x1) x1 = box.x1;
+      if (box.y0 < y0) y0 = box.y0;
+      if (box.y1 > y1) y1 = box.y1;
+    }
+
+    return new Box(x0, y0, x1, y1, boxes);
+  }
+
+  return new Tree((function split(children, depth) {
+    var n = children.length;
+    if (n < 10) return bound(children);
+    children.sort(++depth & 1 ? function(a, b) { return a.x0 - b.x0; } : function(a, b) { return a.y0 - b.y0; });
+    var n0 = n >> 1;
+    return split(children.slice(0, n0), depth).merge(split(children.slice(n0), depth));
+  })(boxes, 0));
 }
 
 function lineSegment_treeFromLine(line) {
