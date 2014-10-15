@@ -63,7 +63,7 @@ function lineSegment_treeFromBoxes(boxes) {
       n0;
 
   while ((n0 = boxes.length) > 1) {
-    boxes1 = new Array(Math.ceil(n0 / 2));
+    var boxes1 = new Array(Math.ceil(n0 / 2));
     for (i0 = 0, i1 = 0; i0 < n0 - 1; i0 += 2, i1 += 1) boxes1[i1] = boxes[i0].merge(boxes[i0 + 1]);
     if (i0 < n0) boxes1[i1] = boxes[i0];
     boxes = boxes1;
